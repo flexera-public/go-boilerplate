@@ -80,17 +80,14 @@ default: $(NAME)
 $(NAME): $(shell find . -name \*.go)
 	go build -ldflags "$(VFLAG)" -o $(NAME) .
 
-#gopath:
-#	@echo export GOPATH="$(GOPATH)"
-
 # the standard build produces a "local" executable, a linux tgz, and a darwin (macos) tgz
 # uncomment and join the windows zip if you need it
-build: depend $(NAME) build/$(NAME)-linux-amd64.tgz build/$(NAME)-darwin-amd64.tgz
+build: $(NAME) build/$(NAME)-linux-amd64.tgz build/$(NAME)-darwin-amd64.tgz
 # build/$(NAME)-linux-arm.tgz build/$(NAME)-windows-amd64.zip
 
 # create a tgz with the binary and any artifacts that are necessary
 # note the hack to allow for various GOOS & GOARCH combos, sigh
-build/$(NAME)-%.tgz: *.go depend
+build/$(NAME)-%.tgz: *.go
 	rm -rf build/$(NAME)
 	mkdir -p build/$(NAME)
 	tgt=$*; GOOS=$${tgt%-*} GOARCH=$${tgt#*-} go build -ldflags "$(VFLAG)"-o build/$(NAME)/$(NAME) .
@@ -99,13 +96,13 @@ build/$(NAME)-%.tgz: *.go depend
 	tar -zcf $@ -C build ./$(NAME)
 	rm -r build/$(NAME)
 
-build/$(NAME)-%.zip: *.go depend
+build/$(NAME)-%.zip: *.go
 	touch $@
 
 # upload assumes you have AWS_ACCESS_KEY_ID and AWS_SECRET_KEY env variables set,
 # which happens in the .travis.yml for CI. Yup, that means you can't run it from your laptop,
 # which is a good thing!
-upload: depend
+upload:
 	@which gof3r >/dev/null || (echo 'Please "go get github.com/rlmcpherson/s3gof3r/gof3r"'; false)
 	(cd build; set -ex; \
 	  for f in *.tgz; do \
@@ -119,9 +116,8 @@ upload: depend
 # Travis doing this. The folllowing just relies on go get not reinstalling when it's already
 # there, like it probably is on your laptop.
 depend:
-	go env
 	go get -v $(DEPEND)
-	glide rebuild
+	glide install
 
 clean:
 	rm -rf build .vendor/pkg
