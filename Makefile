@@ -52,7 +52,7 @@ DEPEND=golang.org/x/tools/cmd/cover github.com/onsi/ginkgo/ginkgo \
 TRAVIS_BRANCH?=dev
 DATE=$(shell date '+%F %T')
 TRAVIS_COMMIT?=$(shell git symbolic-ref HEAD | cut -d"/" -f 3)
-GOVENDOREXPERIMENT=1
+GO15VENDOREXPERIMENT=1
 
 # produce a version string that is embedded into the binary that captures the branch, the date
 # and the commit we're building. This works particularly well if you are using release branch
@@ -130,27 +130,26 @@ lint:
 	@if gofmt -l *.go | grep .go; then \
 	  echo "^- Repo contains improperly formatted go files; run gofmt -w *.go" && exit 1; \
 	  else echo "All .go files formatted correctly"; fi
-	go tool vet -composites=false *.go
-	go tool vet -composites=false **/*.go
+	go tool vet -v -composites=false *.go
+	go tool vet -v -composites=false **/*.go
 
 travis-test: cover
 
 # running ginkgo twice, sadly, the problem is that -cover modifies the source code with the effect
 # that if there are errors the output of gingko refers to incorrect line numbers
 # tip: if you don't like colors use gingkgo -r -noColor
-test: lint gopath
-	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending
+test: lint
+	ginkgo -r -skipPackage vendor --randomizeAllSpecs --randomizeSuites --failOnPending
 
 race: lint
-	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --race
+	ginkgo -r -skipPackage vendor --randomizeAllSpecs --randomizeSuites --failOnPending --race
 
 
-PKGS := github.com/rightscale/uca,github.com/rightscale/uca/gw,github.com/rightscale/uca/keepalive,github.com/rightscale/uca/resources,github.com/rightscale/uca/rnagent
-cover: lint version
-	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending -cover
+cover: lint
+	ginkgo -r -skipPackage vendor --randomizeAllSpecs --randomizeSuites --failOnPending -cover
 	@for d in `echo */*suite_test.go`; do \
 	  dir=`dirname $$d`; \
-	  (cd $$dir; go test -ginkgo.randomizeAllSpecs -ginkgo.failOnPending -cover -coverprofile $$dir_x.coverprofile -coverpkg $(PKGS)); \
+	  (cd $$dir; go test -ginkgo.randomizeAllSpecs -ginkgo.failOnPending -cover -coverprofile $$dir_x.coverprofile -coverpkg $$(go list ./...|egrep -v vendor)); \
 	done
 	@rm -f _total
 	@for f in `find . -name \*.coverprofile`; do tail -n +2 $$f >>_total; done
