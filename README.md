@@ -9,15 +9,15 @@ RightScale Go Boilerplate
 [![Coverage](https://s3.amazonaws.com/rs-code-coverage/go-boilerplate/cc_badge_master.svg)](https://gocover.io/github.com/rightscale/go-boilerplate)
 
 Downloads:
-- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-linux-amd64.tgz
-- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-darwin-amd64.tgz
 - https://binaries.rightscale.com/rsbin/go-boilerplate/master/go-boilerplate-linux-amd64.tgz
 - https://binaries.rightscale.com/rsbin/go-boilerplate/master/go-boilerplate-darwin-amd64.tgz
+- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-linux-amd64.tgz
+- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-darwin-amd64.tgz
 
 Getting Started
 -----------------
  - Install Go 1.5
- - Ensure your GOPATH is set such that $PWD == $GOPATH/github.com/rightscale/go-boilerplate
+ - Ensure your GOPATH is set such that $PWD == $GOPATH/src/github.com/rightscale/go-boilerplate
  - Install dependencies with `make depend`
  - Run tests using `make test`
  - Try it out: `make && ./go-boilerplate`
