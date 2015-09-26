@@ -1,10 +1,38 @@
 RightScale Go Boilerplate
 =========================
 
+- Master (public repo):
+[![Build Status](https://travis-ci.org/rightscale/go-boilerplate.svg?branch=master)](https://travis-ci.org/rightscale/go-boilerplate)
+[![Coverage](https://s3.amazonaws.com/rs-code-coverage/go-boilerplate/cc_badge_master.svg)](https://gocover.io/github.com/rightscale/go-boilerplate)
+- Master (private repo):
+[![Build Status](https://magnum.travis-ci.com/rightscale/uca.svg?branch=master&token=4Q13wQTY4zqXgU7Edw3B)](https://magnum.travis-ci.com/rightscale/uca)
+[![Coverage](https://s3.amazonaws.com/rs-code-coverage/go-boilerplate/cc_badge_master.svg)](https://gocover.io/github.com/rightscale/go-boilerplate)
 
+Downloads:
+- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-linux-amd64.tgz
+- https://binaries.rightscale.com/rsbin/go-boilerplate/v0.1.0/go-boilerplate-darwin-amd64.tgz
+- https://binaries.rightscale.com/rsbin/go-boilerplate/master/go-boilerplate-linux-amd64.tgz
+- https://binaries.rightscale.com/rsbin/go-boilerplate/master/go-boilerplate-darwin-amd64.tgz
 
+Getting Started
+-----------------
+ - Install Go 1.5
+ - Ensure your GOPATH is set such that $PWD == $GOPATH/github.com/rightscale/go-boilerplate
+ - Install dependencies with `make depend`
+ - Run tests using `make test`
+ - Try it out: `make && ./go-boilerplate`
 
-Exercising the boilerplate handlers:
+Go-boilerplate features
+-----------------------
+
+The go-boilerplate is a simple web app that has a couple of handlers to index, get, put, delete
+key-value pairs in a hash table. The features of the repo are:
+ - Simple Makefile and .travis.yml for full lifecycle, from building, testing, code coverage,
+   uploads of binaries to S3, badges in README
+ - Simple web app with logging, error handling, form parsing, and other middleware
+
+Exercising the boilerplate handlers
+-----------------------------------
 ``` shell
 $ curl -i http://localhost:8080/health-check
 HTTP/1.1 200 OK
@@ -13,25 +41,10 @@ Date: Sat, 26 Sep 2015 05:50:13 GMT
 Content-Length: 49
 
 go-boilerplate dev - 2015-09-25 22:47:25 - master
-$ curl -i http://localhost:8080/demo/settings
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-Date: Sat, 26 Sep 2015 05:50:19 GMT
-Content-Length: 2
-
+$ curl http://localhost:8080/demo/settings
 {}
-$ curl -i -XPUT http://localhost:8080/demo/settings/a?value=b
-HTTP/1.1 200 OK
-Date: Sat, 26 Sep 2015 05:50:23 GMT
-Content-Length: 0
-Content-Type: text/plain; charset=utf-8
-
-$ curl -i http://localhost:8080/demo/settings
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-Date: Sat, 26 Sep 2015 05:50:27 GMT
-Content-Length: 9
-
+$ curl -XPUT http://localhost:8080/demo/settings/a?value=b
+$ curl http://localhost:8080/demo/settings
 {"a":"b"}
 $
 ```
