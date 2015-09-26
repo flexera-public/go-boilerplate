@@ -16,6 +16,8 @@ import (
 const simpleTimeFormat = "2006-01-02 15:04:05"
 const simpleMsgJust = 40
 
+// SimpleFormat produces the format used in log15 for the terminal without the color
+// highlighting and irrespective of the destination.
 func SimpleFormat(timestamps bool) log15.Format {
 	return log15.FormatFunc(func(r *log15.Record) []byte {
 		b := &bytes.Buffer{}

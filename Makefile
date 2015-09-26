@@ -95,9 +95,7 @@ upload:
 	    fi; \
 	  done)
 
-# Installing build dependencies is a bit of a mess. Don't want to spend lots of time in
-# Travis doing this. The folllowing just relies on go get not reinstalling when it's already
-# there, like it probably is on your laptop.
+# Installing build dependencies. You will need to run this once manually when you clone the repo
 depend:
 	go get -v $(DEPEND)
 	glide install
@@ -105,14 +103,22 @@ depend:
 clean:
 	rm -rf build .vendor/pkg
 
-# gofmt uses the awkward *.go */*.go because gofmt -l . descends into the .vendor tree
-# and then pointlessly complains about bad formatting in imported packages, sigh
+# run gofmt and complain if a file is out of compliance
+# run go vet and similarly complain if there are issues
+# run go lint and complain if there are issues
+# TODO: go tool vet is currently broken with the vendorexperiement
 lint:
-	@if gofmt -l *.go | grep .go; then \
+	@if gofmt -l . | egrep -v ^vendor/ | grep .go; then \
 	  echo "^- Repo contains improperly formatted go files; run gofmt -w *.go" && exit 1; \
 	  else echo "All .go files formatted correctly"; fi
-	go tool vet -v -composites=false *.go
-	go tool vet -v -composites=false **/*.go
+	#go tool vet -v -composites=false *.go
+	#go tool vet -v -composites=false **/*.go
+	@if for pkg in $$(go list ./... |grep -v /vendor/); do golint $$pkg; done | \
+	  egrep -v /vendor/ | grep '\.go:'; then \
+	  echo "^- Repo contains lint issues; run golint" && exit 1; \
+	  else echo "All .go files are free of lint"; fi
+
+
 
 travis-test: cover
 
