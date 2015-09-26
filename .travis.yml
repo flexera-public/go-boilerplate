@@ -25,7 +25,6 @@ install:
   - GOOS=darwin GOARCH=amd64 gimme 1.5
   - GOOS=windows GOARCH=amd64 gimme 1.5
   - GOOS=linux GOARCH=arm gimme 1.5
-  - make -v
   - make depend
 
 before_script: make build
