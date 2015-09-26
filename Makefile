@@ -45,7 +45,7 @@ ACL=public-read
 # global Go env and not in the vendor sub-tree
 DEPEND=golang.org/x/tools/cmd/cover github.com/onsi/ginkgo/ginkgo \
        github.com/onsi/gomega github.com/rlmcpherson/s3gof3r/gof3r \
-       github.com/dkulchenko/bunch
+       github.com/Masterminds/glide
 
 #=== below this line ideally remains unchanged, add new targets at the end  ===
 
@@ -119,8 +119,7 @@ upload: depend
 # there, like it probably is on your laptop.
 depend:
 	go get -v $(DEPEND)
-	bunch install
-	rm .vendor/src/github.com/rightscale/uca
+	glide rebuild
 
 clean:
 	rm -rf build .vendor/pkg
