@@ -52,7 +52,8 @@ DEPEND=golang.org/x/tools/cmd/cover github.com/onsi/ginkgo/ginkgo \
 TRAVIS_BRANCH?=dev
 DATE=$(shell date '+%F %T')
 TRAVIS_COMMIT?=$(shell git symbolic-ref HEAD | cut -d"/" -f 3)
-GO15VENDOREXPERIMENT="1"
+GO15VENDOREXPERIMENT=1
+export GO15VENDOREXPERIMENT
 
 # produce a version string that is embedded into the binary that captures the branch, the date
 # and the commit we're building. This works particularly well if you are using release branch
@@ -118,7 +119,6 @@ upload: depend
 # Travis doing this. The folllowing just relies on go get not reinstalling when it's already
 # there, like it probably is on your laptop.
 depend:
-	printenv | egrep '^GO'
 	go env
 	go get -v $(DEPEND)
 	glide rebuild
