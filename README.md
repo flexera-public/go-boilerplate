@@ -18,6 +18,7 @@ Getting Started
 -----------------
  - Install Go 1.5
  - Ensure your GOPATH is set such that $PWD == $GOPATH/src/github.com/rightscale/go-boilerplate
+ - You should set GO15VENDOREXPERIMENT=1 in your env, but you don't have to
  - Install dependencies with `make depend`
  - Run tests using `make test`
  - Try it out: `make && ./go-boilerplate`
@@ -30,6 +31,9 @@ key-value pairs in a hash table. The features of the repo are:
  - Simple Makefile and .travis.yml for full lifecycle, from building, testing, code coverage,
    uploads of binaries to S3, badges in README
  - Simple web app with logging, error handling, form parsing, and other middleware
+ - Uses the Go1.5 vendor experiment and glide to manage packages. To add a new dependency
+   use `glide get ...` like you would `go get` and check out `glide up` to update packages to
+   the latest version
 
 Exercising the boilerplate handlers
 -----------------------------------
