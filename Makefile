@@ -3,15 +3,15 @@
 # Makefile for Golang projects, v2
 #
 # Features:
-# - uses github.com/dkulchenko/bunch to manage import dependencies
+# - uses github.com/Masterminds/glide to manage dependencies and uses GO15VENDOREXPERIMENT
 # - runs ginkgo tests recursively, computes code coverage report
-# - code coverage ready for travis-ci to upload and produce badges for README.md
+# - runs gofmt and go vet
+# - prepares code coverage so travis-ci can upload it and produce badges for README.md
 # - build for linux/amd64, linux/arm, darwin/amd64, windows/amd64
 # - just 'make' builds for local OS/arch
 # - produces .tgz/.zip build output
-# - bundles *.sh files in ./script subdirectory
-# - produces version.go for each build with string in global variable VV, please
-#   print this using a --version option in the executable
+# - can bundle additional files into archive
+# - sets a VERSION variable in the app
 # - to include the build status and code coverage badge in CI use (replace NAME by what
 #   you set $(NAME) to further down, and also replace magnum.travis-ci.com by travis-ci.org for
 #   publicly accessible repos [sigh]):
@@ -24,13 +24,6 @@
 # test: runs unit tests recursively and produces code coverage stats and shows them
 # travis-test: just runs unit tests recursively
 # clean: removes build stuff
-#
-# ** GOPATH and import dependencies **
-# - use `bunch generate` to generate the initial Bunchfile
-# - for private repos do the following:
-# - to update dependencies look into `bunch update`
-# - to compile or run ginkgo like in the Makefile:
-#   export GOPATH=`pwd`/.vendor; export PATH="`pwd`/.vendor/bin:$PATH"
 
 # name of this app, used as basename for almost everything
 NAME=go-boilerplate
@@ -41,13 +34,13 @@ BUCKET=rightscale-binaries
 # S3 ACL for uploads, either public-read or ??
 ACL=public-read
 
+#=== below this line ideally remains unchanged, add new targets at the end  ===
+
 # dependencies that are used by the build&test process, these need to be installed in the
 # global Go env and not in the vendor sub-tree
 DEPEND=golang.org/x/tools/cmd/cover github.com/onsi/ginkgo/ginkgo \
        github.com/onsi/gomega github.com/rlmcpherson/s3gof3r/gof3r \
        github.com/Masterminds/glide
-
-#=== below this line ideally remains unchanged, add new targets at the end  ===
 
 TRAVIS_BRANCH?=dev
 DATE=$(shell date '+%F %T')
@@ -60,16 +53,6 @@ export GO15VENDOREXPERIMENT
 # names of the form "v1.2.3"
 VERSION=$(NAME) $(TRAVIS_BRANCH) - $(DATE) - $(TRAVIS_COMMIT)
 VFLAG=-X 'main.VERSION=$(VERSION)'
-
-# we manually adjust the GOPATH instead of trying to prefix everything with `bunch go`
-#ifeq ($(OS),Windows_NT)
-#	SHELL:=/bin/dash
-#	GOPATH:=$(shell cygpath --windows $(PWD))/.vendor;$(GOPATH)
-#else
-#	GOPATH:=$(PWD)/.vendor:$(GOPATH)
-#endif
-# we build $(DEPEND) binaries into the .vendor subdir
-#PATH:=$(PWD)/.vendor/bin:$(PATH)
 
 .PHONY: depend clean default
 
@@ -90,7 +73,7 @@ build: $(NAME) build/$(NAME)-linux-amd64.tgz build/$(NAME)-darwin-amd64.tgz
 build/$(NAME)-%.tgz: *.go
 	rm -rf build/$(NAME)
 	mkdir -p build/$(NAME)
-	tgt=$*; GOOS=$${tgt%-*} GOARCH=$${tgt#*-} go build -ldflags "$(VFLAG)"-o build/$(NAME)/$(NAME) .
+	tgt=$*; GOOS=$${tgt%-*} GOARCH=$${tgt#*-} go build -ldflags "$(VFLAG)" -o build/$(NAME)/$(NAME) .
 	chmod +x build/$(NAME)/$(NAME)
 	cp README.md build/$(NAME)/
 	tar -zcf $@ -C build ./$(NAME)
