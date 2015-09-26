@@ -4,10 +4,15 @@ package main
 
 import (
 	"log"
+	"net"
+	"net/http"
 	"os"
 
-	"github.com/rightscale/uca/log2log15"
-	"github.com/rightscale/wstunnel/tunnel"
+	"github.com/rightscale/go-boilerplate/demo"
+	"github.com/rightscale/go-boilerplate/log2log15"
+	"github.com/rightscale/gojiutil"
+	"github.com/zenazn/goji/graceful"
+	"github.com/zenazn/goji/web"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/inconshreveable/log15.v2"
 )
@@ -20,7 +25,7 @@ func FatalError(message string) {
 
 // Having a root handler as a global variable is useful if one has to send the std log output
 // into log15
-var Log15RootHandler = log15.StreamHandler(os.Stdout, tunnel.SimpleFormat(true))
+var Log15RootHandler = log15.StreamHandler(os.Stdout, log2log15.SimpleFormat(true))
 
 // Embed a version string of the form "go-boilerplate - sdfsfsaf - 24adb4" into the
 // executable where..
@@ -63,10 +68,12 @@ func main() {
 	log.SetOutput(log2log15.NewWriter(log15CtxHandler("pkg", "stdlib", Log15RootHandler)))
 	log.SetFlags(0) // don't print a timestamp
 
-	// Create the internal HTTP servers for the GW and RightLink (really http.Handlers)
-	//gwMux := gw.SetupGWMux()
+	// Set-up the web server routes
+	mx := SetupMainMux()
+	mx.Handle("/demo", demo.NewMux()) // attach demo sub-routes
 
-	log15.Info("Entering main loop")
+	// Start the web server
+	SetupMainServer("localhost:8080", mx)
 	var c chan struct{}
 	<-c // really nothing for us to do, now driven through wstunnels
 }
@@ -77,4 +84,71 @@ func log15CtxHandler(key string, value interface{}, handler log15.Handler) log15
 		r.Ctx = append(r.Ctx, key, value)
 		return handler.Log(r)
 	})
+}
+
+// SetupMainMux returns a goji Mux initialized with the middleware and a health check
+// handler. The mux is a net/http.Handler and thus has a ServeHTTP
+// method which can be convient to call in tests without the actual network stuff and
+// goroutine that SetupMainServer adds
+func SetupMainMux() *web.Mux {
+	mx := web.New()
+	gojiutil.AddCommon15(mx, log15.Root())
+	mx.Use(gojiutil.FormParser)
+	mx.Use(ParamsLogger(log15.Root()))
+	mx.Get("/health-check", healthCheckHandler)
+	mx.NotFound(handleNotFound)
+	return mx
+}
+
+// SetupMainServer allocates a listener socket and starts a web server with graceful restart
+// on the specified IP address and port. The ipPort has the format "ip_address:port" or
+// ":port" for 0.0.0.0/port.
+func SetupMainServer(ipPort string, mux *web.Mux) {
+	listener, err := net.Listen("tcp4", ipPort)
+	if err != nil {
+		FatalError(err.Error())
+	}
+
+	// Install our handler at the root of the standard net/http default mux.
+	// This allows packages like expvar to continue working as expected.
+	mux.Compile()
+	http.Handle("/", mux)
+
+	graceful.HandleSignals()
+	graceful.PreHook(func() { log15.Warn("Gracefully stopping on signal") })
+	graceful.PostHook(func() { log.Printf("Gracefully stopped") })
+
+	err = graceful.Serve(listener, http.DefaultServeMux)
+	if err != nil {
+		FatalError(err.Error())
+	}
+
+	graceful.Wait()
+}
+
+// Simple health-check handler that returns the version string
+func healthCheckHandler(c web.C, rw http.ResponseWriter, r *http.Request) {
+	gojiutil.WriteString(rw, 200, VERSION)
+}
+
+// handleNotFound handler, this should be turned into a middleware...
+func handleNotFound(c web.C, rw http.ResponseWriter, req *http.Request) {
+	rw.WriteHeader(http.StatusNotFound)
+	// probably could print something usefule here...
+}
+
+// ParamsLogger logs all query string / form parameters. TODO: move into gojiutils
+func ParamsLogger(log15.Logger) web.MiddlewareType {
+	return func(c *web.C, h http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			params := []interface{}{}
+			for k, v := range r.Form {
+				params = append(params, k, v[0])
+			}
+			log15.Debug(r.Method+" "+r.URL.Path, params...)
+			//"URLParams", fmt.Sprintf("%+v", c.URLParams))
+			//"Env", fmt.Sprintf("%+v", c.Env))
+			h.ServeHTTP(rw, r)
+		})
+	}
 }

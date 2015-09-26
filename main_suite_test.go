@@ -8,21 +8,17 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/format"
-	"github.com/rightscale/uca/abc"
 	"gopkg.in/inconshreveable/log15.v2"
 )
 
-func init() {
-	abc.InTest = true
-}
-
-func TestUCA(t *testing.T) {
-	//log.SetOutput(ginkgo.GinkgoWriter)
+func TestMain(t *testing.T) {
+	// send the logs through the GinkgoWriter, which buffers up the output for each test
+	// and only prints it if the test fails. Use ginkgo -v to always see the output.
 	Log15RootHandler = log15.StreamHandler(GinkgoWriter, log15.TerminalFormat())
 	log15.Root().SetHandler(Log15RootHandler)
 
 	format.UseStringerRepresentation = true
 	RegisterFailHandler(Fail)
 
-	RunSpecs(t, "UCA")
+	RunSpecs(t, "MAIN")
 }
