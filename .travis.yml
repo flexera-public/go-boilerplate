@@ -8,17 +8,18 @@ go:
 env:
   global:
     # RSBIN_KEY= to upload to rightscale-binaries bucket in q&b acct:
-  - secure: "EAgRzuAkm+w/jjdToRV6iWAzlRIsp2itQS8yQG+u6MLaARkspbc6rpCUN9JKoou2ngWCl3g61/fk2nmTvrLZYvGxPoz1rzLgFiHX2D24KxHyBRZhswEGNQMZrOJF0A18A1ef43PkMNZW67/5PKM4PIajwwVzHvPQgorYD1VUsxs="
+  - secure: "NQtHbH9lR9o7WcxeacMtsfB6lqSQQFl65RYv7Dtv46B2DOaMJgyIxL9v4wDRmVoMZB3HDzeXsZXePgo76s2sXGrEKnPO16/n39zyf+zE+zUOdhrrND9bEOw3X7kzpjO8B2dyCTvGnPKA0rRTJkDvrKHS2oJ+mzMo7JS/BJmwccno7jQ3/rdcA+HqBznUYYokmuhDAkp6i0GgD5EDgUolnGvoDVSOEnuOmnS8reDzdQ6qFFm6pZ/ECD7MJjaWJA1GMsr7FwTBqzRuRJqJj3p5m0YpDMcNEDVMf7VIKFo27EnlkeSyibEQmkVJVnI263ASKU2dYNqhRQisTEbI7tQfACkCWvjQ9Rwy7K+JSMINL5jNZ0Xfw7txFBlKVwI4Uf5SZlO2V+QNgAAPCacyYS+oaLb63UkPah+6K0NDOlRxEume1IXKKOhAUuEdjOHpkT3860Vvt/iyWsqas4S2IazpMWPygxCXw0ExOwAmzK5nZtGkGbZq3VOPKUuNs8+DOrXWKzsOHw0EEQfndlQ5+pJIsLUdGVlkXnpoEzzHQiPkWo6g0kMt4jcUZOjJ9CEUNhEMSyiK/ULXvYNGSBOVWsLfNSA+F9hLVbpnud2UfMiDHMDmg/Dw3mLoc443Hynwsg1Buf8qqEMdRLCx1AaPUpM5Z4aDmPD2/+vIVp+ar0M+BrU="
     # GITHUB_TOKEN= to push code coverage comment to github
-  - secure: "UTj3F8dTOZhjpgkaXYQfGGSxlbnnUAX9SciSMUotgI5i4wfEmKdt7GEC9LsxtO0aWgSfZSALxwxX9SVfTwgu6GvV1PoPEOcB+j4KlhEgku9ZOOT/pVyqncGZ0XusDpzZaDkJ9KlrnhBOW380nPnN747rQ+xpqmj1ZE+SMFjOcv0="
+  - secure: "AjWokt26QQi3sVL8hPTBJvN43Gh73b3VVluIUGXNDFArfhT7a9nhlkALCJ9tyRGS68gr49KAc0ys9IJkFzp3wd1gaOoXqlT+g7dhfgWbNCsTSE0eOFz43LuBrTlS3DJbbJdKBOcRqdmO+l3abPPtGODdffZ0rC+3NlrUawVQNYFk4aFc+2BaENOQlTimSuF6E8o3YbBS6pDkpDvwfIIQXMyjTb7/8rSv3c9FCYi33nuBY/PgBX7qZh5ZapTL2cb+zgc4lSiWYd4eIhylbfgi1BRe2wjQEcNZDj36TjZFgFRyQqFJ3iPPbodN0kTrNOEG0WyXuLFwM+ZbV2zc61bA+ws3KtWVwwxiE3jSjFDWoVhPmHsETpB0O4S5GGBWsg0cMBCFlB+IjSZ3oYxgIPm9CnzdBjmi+3UeFHVCpgpe2F4c2NWzJLbmfokZyp3CHf+ge/ctfQf1lrrFLwaIrmOlr9QQUXwcJ5iG6OoUZgLE1GJQs5DsBzOt3aGD6sMFs4kaUgtcrJwZME/y5ihAdeJYKk6JOuWajkeX/P1iLuze2wxI37/0B/zJpl1DBS/92pHOxLwXGgCTA3izombjlXdCh6b2TMhPx7wnCWjC91KLUTHmzutEqZ3Dmcg1xX49o89/rRvUixnV2dBgTF8FdbNIEUstGl/VTlpbuispqnfWPgw="
     # COV_KEY= code coverage upload keys
-  - secure: "V69YTiaJTVCknhhTRENo4aZLheD5oK3TPv+hspOic+tcBxGCptSeBJFFiOnhMd6Ol9Rb6xzp2dXKOxJkVoeNHuRFna8i215XHulisJK8jx91rVxK1VJ74Nclc+EGg0zKR0+mH3k1/m158rwQaGFIgkUPqoFIycy35Ifpa3VXJ2A="
+  - secure: "b0t3tifchuzJhAzoKBpLwWEA+yqkACEMt4tz0b9xLL8+QRHpPSewbDdk/t/xHGqLKZmhYLRaotlPfNLMM6qoOlnbRS/bohMUqDtKDNt8p4XiPKk2qgtrdbJwV5B7jHYovJI2eFJw0QTv9K2iWUKfw8X0FvH0XJjcep8Rz+ka39DwfcPfCueLciRGD1nQ7UrnHaihAm9Xq+QNLvdxEGqv0yik7tMOZngcVvXIdGrym4YiLE22g8S+PeY2F+05BYJ3xWmma+HuexuOLtpN05UsYnrp5UCd+hi/E/E21D5aoILyvlB5xyDYbQhgcOoZClN/Vr7KUI9jiaSRCLKqNPQ0tqufX7mpd29D2yrR+MLVaOofSGYQpXoOst7sNMu3HQG5JElNzFxAmPd1NqsPdNWSbJmfAdSN6G3AueQGhFtj5WstV9NucS82JSBnpHOdH5WXHK3d2gixJHrLmojfed+lE1Is2nQxe6xsbbj3VOYp48RcHNCnzHRfejmT/sOruE2R8OFSyQKWFa7t/VG4VJPy1JFzEtfjbtM9FYezjR3fopJbyy4SOu+Tdv8hGBKcoK3kjVyXhJlP3dwrKNQbugjYbV8dvTeFd59sTegX6CsYgYfMxu1F3exEnEqz858xLHQLphwdHz3KhdwzUGTElli8gP1V9z/5GgBY+/ATG60mNL8="
 
 # sudo=false makes the build run using a container
 sudo: false
 
 # I'm putting as many tasks as possible into the Makefile, hence the make depend at the end
-# of the following script...
+# of the following script as opposed to a long script here. Good thing about stuff in the
+# Makefile is that you can actually run and test it on a laptop.
 install:
   - export PATH=$PATH:$HOME/gopath/bin # travis' worker doesn't seem to do this consistently
   - GOOS=darwin GOARCH=amd64 gimme 1.5
@@ -28,12 +29,12 @@ install:
 
 before_script: make build
 
-# Everything else in here, we don't put the uploads into an after_success section because
-# that can cause the build to succeed even if the artifacts are not actually uploaded
 script:
   - export NAME=`basename $TRAVIS_BUILD_DIR`
   - echo NAME=$NAME
   - make travis-test
+
+after_success:
   - export PATH=./.vendor/bin:$PATH
   - which gof3r
   # Deploy build result to s3

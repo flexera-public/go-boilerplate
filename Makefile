@@ -118,6 +118,7 @@ upload: depend
 # Travis doing this. The folllowing just relies on go get not reinstalling when it's already
 # there, like it probably is on your laptop.
 depend:
+	go env
 	go get -v $(DEPEND)
 	glide rebuild
 
