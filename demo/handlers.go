@@ -18,9 +18,10 @@ import (
 func NewMux() *web.Mux {
 	mx := web.New()
 	mx.Use(middleware.SubRouter)
-	mx.Use(getJSONBody)
+	//mx.Use(getJSONBody)
 
 	// add settings resource
+	mx.Get("/settings", indexSetting)
 	mx.Get("/settings/:key", getSetting)
 	mx.Put("/settings/:key", putSetting)
 	mx.Delete("/settings/:key", deleteSetting)

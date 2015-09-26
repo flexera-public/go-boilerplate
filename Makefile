@@ -76,7 +76,7 @@ VFLAG=-X 'main.VERSION=$(VERSION)'
 # it does not depend on 'depend' 'cause it's a pain to have that run every time you hit 'make'
 # instead you get to 'make depend' manually once
 default: $(NAME)
-$(NAME): *.go
+$(NAME): $(shell find . -name \*.go)
 	go build -ldflags "$(VFLAG)" -o $(NAME) .
 
 #gopath:

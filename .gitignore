@@ -25,6 +25,7 @@ _testmain.go
 *.coverprofile
 */*.coverprofile
 build/
+go-boilerplate
 
 ## Crazy rules to ignore ./vendor except for what we want to vendor
 vendor/*

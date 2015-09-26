@@ -70,12 +70,10 @@ func main() {
 
 	// Set-up the web server routes
 	mx := SetupMainMux()
-	mx.Handle("/demo", demo.NewMux()) // attach demo sub-routes
+	mx.Handle("/demo/*", demo.NewMux()) // attach demo sub-routes
 
 	// Start the web server
 	SetupMainServer("localhost:8080", mx)
-	var c chan struct{}
-	<-c // really nothing for us to do, now driven through wstunnels
 }
 
 // log15CtxHandler adds a single context variable to the record being logged
@@ -93,8 +91,7 @@ func log15CtxHandler(key string, value interface{}, handler log15.Handler) log15
 func SetupMainMux() *web.Mux {
 	mx := web.New()
 	gojiutil.AddCommon15(mx, log15.Root())
-	mx.Use(gojiutil.FormParser)
-	mx.Use(ParamsLogger(log15.Root()))
+	mx.Use(ParamsLogger(log15.Root())) // useful for debugging
 	mx.Get("/health-check", healthCheckHandler)
 	mx.NotFound(handleNotFound)
 	return mx

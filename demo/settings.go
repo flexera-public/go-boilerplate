@@ -10,7 +10,11 @@ import (
 )
 
 // simple string->string map for demo purposes
-var settings map[string]string
+var settings = make(map[string]string)
+
+func indexSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
+	gojiutil.WriteJSON(c, rw, 200, settings)
+}
 
 // getSetting retrieves a setting from the settings map
 func getSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
@@ -29,7 +33,12 @@ func putSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
 		gojiutil.ErrorString(c, rw, 413, `settings key missing`)
 		return
 	}
-	settings[key] = "hello world"
+	value := r.Form.Get("value")
+	if key == "" {
+		gojiutil.ErrorString(c, rw, 413, `value query string param missing`)
+		return
+	}
+	settings[key] = value
 }
 
 func deleteSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
