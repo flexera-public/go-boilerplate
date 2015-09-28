@@ -40,7 +40,7 @@ ACL=public-read
 # global Go env and not in the vendor sub-tree
 DEPEND=golang.org/x/tools/cmd/cover github.com/onsi/ginkgo/ginkgo \
        github.com/onsi/gomega github.com/rlmcpherson/s3gof3r/gof3r \
-       github.com/Masterminds/glide
+       github.com/Masterminds/glide github.com/golang/lint
 
 TRAVIS_BRANCH?=dev
 DATE=$(shell date '+%F %T')
