@@ -48,6 +48,31 @@ var _ = Describe("Mux-based settings tests", func() {
 		Ω(resp.Code).Should(Equal(200))
 		Ω(resp.Body.String()).Should(Equal("world"))
 	})
+
+	It("deletes and lists", func() {
+		// set a value
+		req, _ := http.NewRequest("PUT", "http://example.com/settings/hello?value=world",
+			bytes.NewReader([]byte{}))
+		resp := httptest.NewRecorder()
+		mx.ServeHTTP(resp, req)
+		Ω(resp.Code).Should(Equal(200))
+		Ω(settings["hello"]).Should(Equal("world"))
+		Ω(settings).Should(HaveLen(1))
+
+		// list the values
+		req, _ = http.NewRequest("GET", "http://example.com/settings", nil)
+		resp = httptest.NewRecorder()
+		mx.ServeHTTP(resp, req)
+		Ω(resp.Code).Should(Equal(200))
+		Ω(resp.Body.String()).Should(Equal(`{"hello":"world"}`))
+
+		// delete the value
+		req, _ = http.NewRequest("DELETE", "http://example.com/settings/hello", nil)
+		resp = httptest.NewRecorder()
+		mx.ServeHTTP(resp, req)
+		Ω(resp.Code).Should(Equal(201))
+		Ω(settings).Should(HaveLen(0))
+	})
 })
 
 // Tests that create a web server and run http requests against it.
@@ -74,5 +99,15 @@ var _ = Describe("HTTP-based settings tests", func() {
 		Ω(settings["hello"]).Should(Equal("world"))
 		respBody, _ = misc.MakeRequest("GET", server.URL+"/settings/hello", "", 200)
 		Ω(respBody).Should(Equal("world"))
+	})
+
+	It("deletes and lists", func() {
+		// MakeRequest issues a request and checks the response status code
+		misc.MakeRequest("PUT", server.URL+"/settings/hello?value=world", "", 200)
+		Ω(settings["hello"]).Should(Equal("world"))
+
+		respObj, _ := misc.MakeRequestObj("GET", server.URL+"/settings", "", 200)
+		Ω(respObj).Should(HaveLen(1))
+		Ω(respObj).Should(HaveKeyWithValue("hello", "world"))
 	})
 })
