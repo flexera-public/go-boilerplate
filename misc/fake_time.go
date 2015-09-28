@@ -14,14 +14,12 @@ var TimeNow = time.Now
 // TimeSleep() is a replacement for time.Sleep() that allows testing
 var TimeSleep = time.Sleep
 
-//===== timeNow / timeSleep stubs
-
-// FakeTime simplifies tests where time.Now() is called as well as time.Sleep(). It allows the
+// FakeTime simplifies tests where time.Now() and time.Sleep() are called. It allows the
 // test to set time.Now() and not have it change so tests can rely on one value. For example,
 // if code calculates time.Now() + 2 seconds then the test can do that too with the same value for
-// now. fakeTime.Sleep() sleeps a minimal amount ot let other goroutines run and then adds the
+// now. FakeTime.Sleep() sleeps a minimal amount to let other goroutines run and then adds the
 // sleep time to the value for "now". In other words, time only advances when sleep is called.
-// Use all this in normal execution by importing this package and using timeNow and timeSleep
+// Use all this in normal execution by importing this package and using TimeNow and TimeSleep
 // instead of time.Now() and time.Sleep()
 // For testing use:
 // func init() {
