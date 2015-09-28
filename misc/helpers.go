@@ -10,25 +10,8 @@ import (
 	"strings"
 
 	"github.com/onsi/gomega"
-	"github.com/zenazn/goji/web"
 	"gopkg.in/inconshreveable/log15.v2"
 )
-
-// ParamsLogger logs all query string / form parameters. TODO: move into gojiutils
-func ParamsLogger(log15.Logger) web.MiddlewareType {
-	return func(c *web.C, h http.Handler) http.Handler {
-		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-			params := []interface{}{}
-			for k, v := range r.Form {
-				params = append(params, k, v[0])
-			}
-			log15.Debug(r.Method+" "+r.URL.Path, params...)
-			//"URLParams", fmt.Sprintf("%+v", c.URLParams))
-			//"Env", fmt.Sprintf("%+v", c.Env))
-			h.ServeHTTP(rw, r)
-		})
-	}
-}
 
 // MakeRequest makes a get request, checksthe http status code, and returns the body as string
 func MakeRequest(method, url, body string, expectedCode int) (string, *http.Response) {

@@ -91,7 +91,7 @@ func log15CtxHandler(key string, value interface{}, handler log15.Handler) log15
 func SetupMainMux() *web.Mux {
 	mx := web.New()
 	gojiutil.AddCommon15(mx, log15.Root())
-	mx.Use(ParamsLogger(log15.Root())) // useful for debugging
+	mx.Use(gojiutil.ParamsLogger(false)) // useful for debugging
 	mx.Get("/health-check", healthCheckHandler)
 	mx.NotFound(handleNotFound)
 	return mx
@@ -132,20 +132,4 @@ func healthCheckHandler(c web.C, rw http.ResponseWriter, r *http.Request) {
 func handleNotFound(c web.C, rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusNotFound)
 	// probably could print something usefule here...
-}
-
-// ParamsLogger logs all query string / form parameters. TODO: move into gojiutils
-func ParamsLogger(log15.Logger) web.MiddlewareType {
-	return func(c *web.C, h http.Handler) http.Handler {
-		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-			params := []interface{}{}
-			for k, v := range r.Form {
-				params = append(params, k, v[0])
-			}
-			log15.Debug(r.Method+" "+r.URL.Path, params...)
-			//"URLParams", fmt.Sprintf("%+v", c.URLParams))
-			//"Env", fmt.Sprintf("%+v", c.Env))
-			h.ServeHTTP(rw, r)
-		})
-	}
 }

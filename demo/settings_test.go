@@ -29,7 +29,7 @@ var _ = Describe("Mux-based settings tests", func() {
 		settings = make(map[string]string)
 		mx = NewMux()
 		gojiutil.AddCommon15(mx, log15.Root())
-		mx.Use(misc.ParamsLogger(log15.Root())) // useful for troubleshooting
+		mx.Use(gojiutil.ParamsLogger(true)) // useful for troubleshooting
 	})
 
 	It("gets what it sets", func() {
@@ -88,7 +88,7 @@ var _ = Describe("HTTP-based settings tests", func() {
 		settings = make(map[string]string)
 		mx := NewMux()
 		gojiutil.AddCommon15(mx, log15.Root())
-		mx.Use(misc.ParamsLogger(log15.Root())) // useful for troubleshooting
+		mx.Use(gojiutil.ParamsLogger(true)) // useful for troubleshooting
 		server = httptest.NewServer(mx)
 	})
 
