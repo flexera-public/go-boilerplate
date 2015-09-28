@@ -92,6 +92,10 @@ var _ = Describe("HTTP-based settings tests", func() {
 		server = httptest.NewServer(mx)
 	})
 
+	AfterEach(func() {
+		server.Close()
+	})
+
 	It("gets what it sets", func() {
 		// MakeRequest issues a request and checks the response status code
 		respBody, _ := misc.MakeRequest("PUT", server.URL+"/settings/hello?value=world",
