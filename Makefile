@@ -113,12 +113,7 @@ lint:
 	  else echo "All .go files formatted correctly"; fi
 	#go tool vet -v -composites=false *.go
 	#go tool vet -v -composites=false **/*.go
-	@if for pkg in $$(go list ./... |grep -v /vendor/); do golint $$pkg; done | \
-	  egrep -v /vendor/ | grep '\.go:'; then \
-	  echo "^- Repo contains lint issues; run golint" && exit 1; \
-	  else echo "All .go files are free of lint"; fi
-
-
+	for pkg in $$(go list ./... |grep -v /vendor/); do golint $$pkg; done
 
 travis-test: cover
 

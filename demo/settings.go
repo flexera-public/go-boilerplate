@@ -7,6 +7,7 @@ import (
 
 	"github.com/rightscale/gojiutil"
 	"github.com/zenazn/goji/web"
+	"gopkg.in/inconshreveable/log15.v2"
 )
 
 // simple string->string map for demo purposes
@@ -24,6 +25,7 @@ func getSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
 		gojiutil.Errorf(c, rw, 404, `settings key '%s' not found`, key)
 		return
 	}
+	log15.Info("settings", "op", "get", "key", key, "value", value)
 	gojiutil.WriteString(rw, 200, value)
 }
 
@@ -38,11 +40,13 @@ func putSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
 		gojiutil.ErrorString(c, rw, 413, `value query string param missing`)
 		return
 	}
+	log15.Info("settings", "op", "put", "key", key, "value", value)
 	settings[key] = value
 }
 
 func deleteSetting(c web.C, rw http.ResponseWriter, r *http.Request) {
 	key := c.URLParams["key"]
+	log15.Info("settings", "op", "delete", "key", key)
 	delete(settings, key)
 	rw.WriteHeader(201)
 }
