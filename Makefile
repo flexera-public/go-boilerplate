@@ -129,7 +129,7 @@ race: lint
 
 cover: lint
 	ginkgo -r -skipPackage vendor --randomizeAllSpecs --randomizeSuites --failOnPending -cover
-	@for d in `echo */*suite_test.go`; do \
+	@for d in `ls */*suite_test.go`; do \
 	  dir=`dirname $$d`; \
 	  (cd $$dir; go test -ginkgo.randomizeAllSpecs -ginkgo.failOnPending -cover -coverprofile $$dir_x.coverprofile -coverpkg $$(go list ./...|egrep -v vendor)); \
 	done
@@ -138,4 +138,4 @@ cover: lint
 	@echo 'mode: atomic' >total.coverprofile
 	@awk -f merge-profiles.awk <_total >>total.coverprofile
 	COVERAGE=$$(go tool cover -func=total.coverprofile | grep "^total:" | grep -o "[0-9\.]*");\
-	  echo "*** Code Coverage is $$COVERAGE% ***"
+	  echo "*** Code Coverage is $${COVERAGE:-0}% ***"
